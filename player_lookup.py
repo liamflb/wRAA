@@ -32,7 +32,7 @@ def player_lookup(name, start_year, end_year = None):
 
     player_woba = np.round(player_woba, decimals=3)
 
-    return player_woba
+    return [player_woba, plate_apps]
 
 
 #-----------Do xwoba by player to get better graph---------------------#
@@ -59,13 +59,15 @@ name_to_mlb_woba = mlb_predictions.set_index('qualified_batters')['est_woba'].to
 my_wobas = []
 mlb_wobas = []
 names = []
+plate_apps = []
 
 for name in qualified_hitters:
     try:
         # attempt to look up and append
-        my_wobas.append(player_lookup(name, 2024))
+        my_wobas.append(player_lookup(name, 2024)[0])
         mlb_wobas.append(name_to_mlb_woba[name])
         names.append(name)
+        plate_apps.append(player_lookup(name, 2024)[1])
     except KeyError:
         # whenever player_lookup or the dict lookup fails
         #print(f"Player ID not found for {name!r}")
@@ -83,11 +85,13 @@ y = x
 my_wobas = np.array(my_wobas)
 mlb_wobas = np.array(mlb_wobas)
 names = np.array(names)
+plate_apps = np.array(plate_apps)
 
 mask = ~np.isnan(my_wobas)
 my_wobas_clean = my_wobas[mask]
 mlb_wobas_clean = mlb_wobas[mask]
 names_clean = names[mask]
+plate_apps_clean = plate_apps[mask]
 
 slope, intercept, r_value, p_value, std_err = stats.linregress(my_wobas_clean, mlb_wobas_clean)
 
@@ -108,11 +112,9 @@ plt.show()
 liam_wobas_by_player = pd.DataFrame({
     'player': names_clean,
     'liam_xwOBA': my_wobas_clean,
+    'pas': plate_apps_clean
 })
 
 liam_wobas_by_player = liam_wobas_by_player.sort_values(by="liam_xwOBA", ascending=False)
 liam_wobas_by_player.to_csv("player_wobas.csv", index=False)
 
-all = data['liam_xwoba'][data['year'] == 2024]
-
-print(np.mean(all))
