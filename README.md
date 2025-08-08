@@ -1,5 +1,5 @@
-# xwoba
-Mimicking xwOBA
+# xwOBA/wRAA
+Mimicking xwOBA/wrAA
 
 My goal was to create my own xwOBA statistic using an algorithm with exit velocity and launch angle, trained against total bases. I used batted ball data from Statcast, scraped with pybaseball, and used FanGraphs for wOBA constants and information. I was inspired to try this myself by this article: https://medium.com/@thomasjamesnestico/modelling-xwoba-with-knn-9b004e93861a. I decided to first recreate xwOBA with K-Nearest Neighbors, similar to what MLB does for their stat. 
 
